@@ -84,42 +84,43 @@ RV.engine = (function() {
 
         _createGameTurn = function() {
             var robotIndicesInOrderForThisUpdate = _createRandomizedListOfRobotIndices(),
-                currentRobot, moves = [], currentMoves, maxMoves = 0, i;
+                currentRobot, movingRobots = [], currentRobotsMoves, maxMoves = 0, i;
             for (i = 0; i < robotIndicesInOrderForThisUpdate.length; i++) {
                 currentRobot = robots[robotIndicesInOrderForThisUpdate[i]];
-                currentMoves = currentRobot.getMoves(world.getViewOfTheWorld(currentRobot.name, currentRobot.status.eyes));
-                moves.push( {
-                        name: currentRobot.name,
-                        moves: currentMoves
+                currentRobotsMoves = currentRobot.getMoves(world.getViewOfTheWorld(currentRobot.name, currentRobot.status.eyes));
+                movingRobots.push( {
+                    name: currentRobot.name,
+                    moves: currentRobotsMoves
                 });
                 // The robot with most moves sets the limit
-                maxMoves = Math.max(maxMoves, currentMoves.length);
+                maxMoves = Math.max(maxMoves, currentRobotsMoves.length);
             }
-            console.log("maxMoves == " + maxMoves);
             return {
-                moves: moves,
+                movingRobots: movingRobots,
                 moveIndex: 0,
                 finalMoveIndex: maxMoves - 1
             }
         },
 
         _update = function() {
-            var currentMove, i;
-            if (!currentGameTurn) {
+            var currentMovingRobot, currentMove, i;
+            if (!currentGameTurn || currentGameTurn.finalMoveIndex < currentGameTurn.moveIndex) {
                 // New full game turn
                 console.log("New full game turn");
                 currentGameTurn = _createGameTurn();
             }
-            if (currentGameTurn.finalMoveIndex >= currentGameTurn.moveIndex) {
-                // Moves to execute in this game turn, do them in order
-                for (i = 0; i < currentGameTurn.moves.length; i++) {
-                    currentMove = currentGameTurn.moves[i];
-                    world.act(currentMove.name, currentMove.moves[currentGameTurn.moveIndex]);
+
+            // Moves to execute in this game turn, do them in order
+            for (i = 0; i < currentGameTurn.movingRobots.length; i++) {
+                currentMovingRobot = currentGameTurn.movingRobots[i];
+                currentMove = currentMovingRobot.moves[currentGameTurn.moveIndex];
+                if(currentMove !== undefined) {
+                    // This robot still has moves
+                    world.act(currentMovingRobot.name, currentMovingRobot.moves[currentGameTurn.moveIndex]);
                 }
-                currentGameTurn.moveIndex++;
-            } else {
-                currentGameTurn = null;
             }
+            currentGameTurn.moveIndex++;
+
             world.draw();
         }
 
@@ -157,9 +158,9 @@ RV.engine = (function() {
 Object.freeze(RV);
 Object.freeze(RV.__proto__);
 
-setTimeout(RV.engine.update, 2000);
-setTimeout(RV.engine.update, 4000);
-setTimeout(RV.engine.update, 6000);
+setInterval(RV.engine.update, 200);
+//setTimeout(RV.engine.update, 4000);
+//setTimeout(RV.engine.update, 6000);
 
 /*
  ,

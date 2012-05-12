@@ -18,7 +18,7 @@
                                 move.push("shoot:" + arr[i].direction);
                             }
                         }
-                        if (trackMoves < configuration.tracks && tileContains.indexOf("empty") !== -1) {
+                        if (Math.random() > 0.5 && trackMoves < configuration.tracks && tileContains.indexOf("empty") !== -1) {
                             for (; trackMoves < configuration.tracks; trackMoves++){
                                 move.push("move:" + arr[i].direction);
                             }

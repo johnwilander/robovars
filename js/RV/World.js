@@ -79,7 +79,9 @@ RV.World = function(width, height) {
         },
 
         _placeRobotInEmptyPosition = function(robotName) {
-            robotPositions[robotName] = _getEmptyPosition();
+            var emptyPosition = _getEmptyPosition();
+            robotPositions[robotName] = emptyPosition;
+            world[emptyPosition.x][emptyPosition.y] = robotName;
             console.log("Placed robot " + robotName + " in position x: " + robotPositions[robotName].x + ", y: " + robotPositions[robotName].y);
         },
 
@@ -102,29 +104,45 @@ RV.World = function(width, height) {
             return _getWhatAPositionContains(position) === "empty";
         },
 
+        _setPositionEmpty = function(position) {
+            world[position.x][position.y] = "empty";
+        },
+
+        _setPositionContained = function(position, containsWhat) {
+            world[position.x][position.y] = containsWhat;
+        },
+
         _move = function(robotName, direction) {
             var x = robotPositions[robotName].x, y = robotPositions[robotName].y;
             console.log("About to move robot " + robotName + " to the " + direction);
 
             switch (direction) {
                 case "north":
-                    if(_isPositionEmpty( { x: x, y: y + 1 })) {
-                        robotPositions[robotName].y = y + 1;
+                    if(_isPositionEmpty( { x: x, y: y - 1 })) {
+                        robotPositions[robotName].y = y - 1;
+                        _setPositionContained( { x: x, y: (y-1) }, robotName);
+                        _setPositionEmpty( { x: x, y: y } );
                     }
                     break;
                 case "east":
                     if(_isPositionEmpty( { x: x + 1, y: y })) {
                         robotPositions[robotName].x = x + 1;
+                        _setPositionContained( { x: (x+1), y: y }, robotName);
+                        _setPositionEmpty( { x: x, y: y } );
                     }
                     break;
                 case "south":
-                    if(_isPositionEmpty( { x: x, y: y - 1 })) {
-                        robotPositions[robotName].y = y - 1;
+                    if(_isPositionEmpty( { x: x, y: y + 1 })) {
+                        robotPositions[robotName].y = y + 1;
+                        _setPositionContained( { x: x, y: (y+1) }, robotName);
+                        _setPositionEmpty( { x: x, y: y } );
                     }
                     break;
                 case "west":
                     if(_isPositionEmpty( { x: x - 1, y: y })) {
                         robotPositions[robotName].x = x - 1;
+                        _setPositionContained( { x: (x-1), y: y }, robotName);
+                        _setPositionEmpty( { x: x, y: y } );
                     }
                     break;
             }

@@ -48,18 +48,15 @@ RV.view = function() {
             }
 
             for (currentRobot in robots) {
-                console.log("About to draw robots");
                 currentX = robots[currentRobot].x;
                 currentY = robots[currentRobot].y;
                 if(currentRobot === "johnwilander") {
                     if (heroReady) {
                         context.drawImage(heroImage, currentX * TILE_WIDTH, currentY * TILE_HEIGHT);
-                        console.log("Drew a hero at x == " + currentX * TILE_WIDTH + ", y == " + currentY * TILE_HEIGHT);
                     }
                 } else {
                     if (goblinReady) {
                         context.drawImage(goblinImage, currentX * TILE_WIDTH, currentY * TILE_HEIGHT);
-                        console.log("Drew a goblin at x == " + currentX * TILE_WIDTH + ", y == " + currentY * TILE_HEIGHT);
                     }
                 }
             }
