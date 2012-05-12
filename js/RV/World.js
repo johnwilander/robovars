@@ -27,16 +27,15 @@ RV.World = function(width, height) {
         },
 
         _getViewOfTheWorld = function(robotName, sightLength) {
-            console.log("_getViewOfTheWorld sightLength == " + sightLength);
             var viewOfTheWorld, i, column, positionInfo, viewAsArray, obj,
                 posX = robots[robotName].x, posY = robots[robotName].y;
             if(posX < 0 || posX >= width || posY < 0 || posY >= height) {
                 throw new Error("Position outside world. Cannot give view of the world.");
             } else {
                 viewOfTheWorld = {};
+                viewOfTheWorld.array = [];
                 // i start at 1 since the robot sees one step ahead per iteration
                 for (i = 1; i <= sightLength; i++) {
-                    console.log("_getViewOfTheWorld in loop");
 
                     // North, aka y-i
                     column = world[posX];
@@ -50,6 +49,7 @@ RV.World = function(width, height) {
                             viewOfTheWorld["north" + i+1] = {contains: positionInfo, direction: "north"};
                         }
                     }
+                    viewOfTheWorld.array.push(viewOfTheWorld["north" + i+1]);
 
                     // East, aka x+i
                     column = world[posX+i];
@@ -63,6 +63,7 @@ RV.World = function(width, height) {
                             viewOfTheWorld["east" + i+1] = {contains: positionInfo, direction: "east"};
                         }
                     }
+                    viewOfTheWorld.array.push(viewOfTheWorld["east" + i+1]);
 
                     // South, aka y+i
                     column = world[posX];
@@ -76,6 +77,7 @@ RV.World = function(width, height) {
                             viewOfTheWorld["south" + i+1] = {contains: positionInfo, direction: "south"};
                         }
                     }
+                    viewOfTheWorld.array.push(viewOfTheWorld["south" + i+1]);
 
                     // West, aka x-i
                     column = world[posX-i];
@@ -88,17 +90,10 @@ RV.World = function(width, height) {
                         } else {
                             viewOfTheWorld["west" + i+1] = {contains: positionInfo, direction: "west"};
                         }
-
                     }
+                    viewOfTheWorld.array.push(viewOfTheWorld["west" + i+1]);
                 }
             }
-            viewAsArray = [];
-            for(obj in viewOfTheWorld) {
-                if (viewAsArray.hasOwnProperty(obj)) {
-                    viewAsArray.push(obj);
-                }
-            }
-            viewOfTheWorld.array = viewAsArray;
             return viewOfTheWorld;
         },
 
@@ -121,7 +116,7 @@ RV.World = function(width, height) {
 
         _parseAction = function(action) {
             var parsedAction;
-            if (!(action instanceof "string") || action.indexOf(":") === -1 || action.length > 11) {
+            if (!(typeof action === "string") || action.indexOf(":") === -1 || action.length > 11) {
                 throw new Error("Error parsing action: " + action);
             }
             parsedAction = action.split(":");

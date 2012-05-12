@@ -95,6 +95,7 @@ RV.engine = (function() {
                 // The robot with most moves sets the limit
                 maxMoves = Math.max(maxMoves, currentMoves.length);
             }
+            console.log("maxMoves == " + maxMoves);
             return {
                 moves: moves,
                 moveIndex: 0,
@@ -106,6 +107,7 @@ RV.engine = (function() {
             var currentMove, i;
             if (!currentGameTurn) {
                 // New full game turn
+                console.log("New full game turn");
                 currentGameTurn = _createGameTurn();
             }
             if (currentGameTurn.finalMoveIndex >= currentGameTurn.moveIndex) {
@@ -155,7 +157,9 @@ RV.engine = (function() {
 Object.freeze(RV);
 Object.freeze(RV.__proto__);
 
-setInterval(RV.engine.update, 2000);
+setTimeout(RV.engine.update, 2000);
+setTimeout(RV.engine.update, 4000);
+setTimeout(RV.engine.update, 6000);
 
 /*
  ,
