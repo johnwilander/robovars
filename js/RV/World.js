@@ -8,7 +8,7 @@ RV.World = function(width, height) {
 
     var world,
         view = RV.view(),
-        robots = [],
+        robotPositions = [],
 
         _createWorld = function() {
             var x, y;
@@ -26,9 +26,18 @@ RV.World = function(width, height) {
             }
         },
 
+        _getWhatAPositionContains = function(position) {
+            var column = world[position.x];
+            if (column === undefined || column[position.y] === undefined) {
+                return "invisible";
+            } else {
+                return column[position.y];
+            }
+        },
+
         _getViewOfTheWorld = function(robotName, sightLength) {
             var viewOfTheWorld, i, column, positionInfo, viewAsArray, obj,
-                posX = robots[robotName].x, posY = robots[robotName].y;
+                posX = robotPositions[robotName].x, posY = robotPositions[robotName].y;
             if(posX < 0 || posX >= width || posY < 0 || posY >= height) {
                 throw new Error("Position outside world. Cannot give view of the world.");
             } else {
@@ -38,59 +47,19 @@ RV.World = function(width, height) {
                 for (i = 1; i <= sightLength; i++) {
 
                     // North, aka y-i
-                    column = world[posX];
-                    if (column === undefined) {
-                        viewOfTheWorld["north" + i+1] = {contains: "invisible", direction: "north"};
-                    } else {
-                        positionInfo = column[posY-i];
-                        if (positionInfo === undefined) {
-                            viewOfTheWorld["north" + i+1] = {contains: "invisible", direction: "north"};
-                        } else {
-                            viewOfTheWorld["north" + i+1] = {contains: positionInfo, direction: "north"};
-                        }
-                    }
+                    viewOfTheWorld["north" + i+1] = {contains: _getWhatAPositionContains({ x: posX, y: posY-i }), direction: "north"};
                     viewOfTheWorld.array.push(viewOfTheWorld["north" + i+1]);
 
                     // East, aka x+i
-                    column = world[posX+i];
-                    if (column === undefined) {
-                        viewOfTheWorld["east" + i+1] = {contains: "invisible", direction: "east"};
-                    } else {
-                        positionInfo = column[posY];
-                        if (positionInfo === undefined) {
-                            viewOfTheWorld["east" + i+1] = {contains: "invisible", direction: "east"};
-                        } else {
-                            viewOfTheWorld["east" + i+1] = {contains: positionInfo, direction: "east"};
-                        }
-                    }
+                    viewOfTheWorld["east" + i+1] = {contains: _getWhatAPositionContains({ x: posX+i, y: posY }), direction: "east"};
                     viewOfTheWorld.array.push(viewOfTheWorld["east" + i+1]);
 
                     // South, aka y+i
-                    column = world[posX];
-                    if (column === undefined) {
-                        viewOfTheWorld["south" + i+1] = {contains: "invisible", direction: "south"};
-                    } else {
-                        positionInfo = column[posY+i];
-                        if (positionInfo === undefined) {
-                            viewOfTheWorld["south" + i+1] = {contains: "invisible", direction: "south"};
-                        } else {
-                            viewOfTheWorld["south" + i+1] = {contains: positionInfo, direction: "south"};
-                        }
-                    }
+                    viewOfTheWorld["south" + i+1] = {contains: _getWhatAPositionContains({ x: posX, y: posY+i }), direction: "south"};
                     viewOfTheWorld.array.push(viewOfTheWorld["south" + i+1]);
 
                     // West, aka x-i
-                    column = world[posX-i];
-                    if (column === undefined) {
-                        viewOfTheWorld["west" + i+1] = {contains: "invisible", direction: "west"};
-                    } else {
-                        positionInfo = column[posY];
-                        if (positionInfo === undefined) {
-                            viewOfTheWorld["west" + i+1] = {contains: "invisible", direction: "west"};
-                        } else {
-                            viewOfTheWorld["west" + i+1] = {contains: positionInfo, direction: "west"};
-                        }
-                    }
+                    viewOfTheWorld["west" + i+1] = {contains: _getWhatAPositionContains({ x: posX-i, y: posY }), direction: "west"};
                     viewOfTheWorld.array.push(viewOfTheWorld["west" + i+1]);
                 }
             }
@@ -110,8 +79,8 @@ RV.World = function(width, height) {
         },
 
         _placeRobotInEmptyPosition = function(robotName) {
-            robots[robotName] = _getEmptyPosition();
-            console.log("Placed robot " + robotName + " in position x: " + robots[robotName].x + ", y: " + robots[robotName].y);
+            robotPositions[robotName] = _getEmptyPosition();
+            console.log("Placed robot " + robotName + " in position x: " + robotPositions[robotName].x + ", y: " + robotPositions[robotName].y);
         },
 
         _parseAction = function(action) {
@@ -129,8 +98,36 @@ RV.World = function(width, height) {
             }
         },
 
+        _isPositionEmpty = function(position) {
+            return _getWhatAPositionContains(position) === "empty";
+        },
+
         _move = function(robotName, direction) {
+            var x = robotPositions[robotName].x, y = robotPositions[robotName].y;
             console.log("About to move robot " + robotName + " to the " + direction);
+
+            switch (direction) {
+                case "north":
+                    if(_isPositionEmpty( { x: x, y: y + 1 })) {
+                        robotPositions[robotName].y = y + 1;
+                    }
+                    break;
+                case "east":
+                    if(_isPositionEmpty( { x: x + 1, y: y })) {
+                        robotPositions[robotName].x = x + 1;
+                    }
+                    break;
+                case "south":
+                    if(_isPositionEmpty( { x: x, y: y - 1 })) {
+                        robotPositions[robotName].y = y - 1;
+                    }
+                    break;
+                case "west":
+                    if(_isPositionEmpty( { x: x - 1, y: y })) {
+                        robotPositions[robotName].x = x - 1;
+                    }
+                    break;
+            }
         },
 
         _shoot = function(robotName, direction) {
@@ -152,7 +149,7 @@ RV.World = function(width, height) {
         },
 
         _draw = function () {
-            view.drawCanvas(robots);
+            view.drawCanvas(robotPositions);
             view.toggleTitleCaret();
         };
 

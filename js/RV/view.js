@@ -7,7 +7,7 @@ RV.view = function() {
     "use strict";
     var canvas = document.getElementById("robovarsCanvas"),
         context = canvas.getContext("2d"),
-        TILE_WIDTH = 64, TILE_HEIGHT = 60,
+        TILE_WIDTH = 32, TILE_HEIGHT = 32,
         backgroundReady = false, heroReady = false, goblinReady= false,
         backgroundImage = new Image(), heroImage = new Image(), goblinImage = new Image(),
 
@@ -42,7 +42,7 @@ RV.view = function() {
 
         // Currently only supports exactly two robots. First robot is hero, second is the goblin.
         _drawCanvas = function(robots) {
-            var currentRobot, even = false, currentX, currentY;
+            var currentRobot, currentX, currentY, currentName;
             if (backgroundReady) {
                 context.drawImage(backgroundImage, 0, 0);
             }
@@ -51,18 +51,16 @@ RV.view = function() {
                 console.log("About to draw robots");
                 currentX = robots[currentRobot].x;
                 currentY = robots[currentRobot].y;
-                if(even) {
+                if(currentRobot === "johnwilander") {
                     if (heroReady) {
                         context.drawImage(heroImage, currentX * TILE_WIDTH, currentY * TILE_HEIGHT);
                         console.log("Drew a hero at x == " + currentX * TILE_WIDTH + ", y == " + currentY * TILE_HEIGHT);
                     }
-                    even = false;
                 } else {
                     if (goblinReady) {
                         context.drawImage(goblinImage, currentX * TILE_WIDTH, currentY * TILE_HEIGHT);
                         console.log("Drew a goblin at x == " + currentX * TILE_WIDTH + ", y == " + currentY * TILE_HEIGHT);
                     }
-                    even = true;
                 }
             }
         };

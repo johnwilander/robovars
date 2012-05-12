@@ -8,7 +8,7 @@ RV.engine = (function() {
 
     var robots = [], deadRobots = [],
         MAX_CONFIG_POINTS = 50,
-        world = RV.World(8, 8),
+        world = RV.World(16, 15),
         currentGameTurn = null,
 
     // Registration functions
