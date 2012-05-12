@@ -34,10 +34,13 @@
        chromium.org/developers/how-tos/chrome-frame-getting-started -->
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
   <header>
-
+      <h1 id="roboVarsTitle">RoboVars&#8248;</h1>
   </header>
   <div role="main">
-
+    <canvas id="robovarsCanvas" style="float: left"></canvas>
+      <div id="warLog" style="width: 512; height: 480; float: right;">
+          <h3>War Log</h3>
+      </div>
   </div>
   <footer>
 
@@ -52,9 +55,11 @@
 
   <!-- scripts concatenated and minified via build script -->
   <script src="js/plugins.js"></script>
-  <script src="js/game.js"></script>
   <script src="js/RV/World.js"></script>
+  <script src="js/RV/view.js"></script>
   <script src="js/RV/engine.js"></script>
+  <script src="js/RV/robots/johnwilander.js"></script>
+  <script src="js/RV/robots/randombot.js"></script>
   <!-- end scripts -->
 
   <!-- Asynchronous Google Analytics snippet. Change UA-XXXXX-X to be your site's ID.

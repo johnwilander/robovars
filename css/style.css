@@ -218,7 +218,17 @@ td { vertical-align: top; }
    Author:
    ========================================================================== */
 
+body {
+    font-family: monospace;
+    margin-left: 50px;
+    margin-right: 50px;
+    background-color:#000;
+}
 
+h1 {
+    font-family: monospace;
+    color: white;
+}
 
 
 
