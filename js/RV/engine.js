@@ -6,8 +6,8 @@ RV = window.RV ? window.RV : {};
 RV.engine = (function() {
     "use strict";
 
-    var robots = [], deadRobots = [],
-        MAX_CONFIG_POINTS = 50,
+    var robots = [], robotIndicesByName = {}, deadRobots = [],
+        MAX_CONFIG_POINTS = 60,
         world = RV.World(16, 15),
         currentGameTurn = null,
 
@@ -46,14 +46,16 @@ RV.engine = (function() {
 
         _registerRegularRobot = function(robot) {
             var nextIndex;
-            console.log("About to register robot");
             if(_nameOK(robot.name) && _configurationOK(robot.configuration) && _initFunctionOK(robot.init)) {
                 nextIndex = robots.length;
                 robots[nextIndex] = robot.init();
                 robots[nextIndex].name = robot.name;
                 robots[nextIndex].status = robot.configuration;
                 world.placeRobotInEmptyPosition(robot.name);
+                robotIndicesByName[robot.name] = nextIndex;
+                RV.ui.populateUi(robot.name, robot.configuration.eyes, robot.configuration.tracks, robot.configuration.lasers, robot.configuration.shields);
                 console.log("Registered robot " + robot.name);
+                console.log("" + robot.name + ": " + robots[nextIndex].warCry);
             }
         },
 
@@ -66,6 +68,36 @@ RV.engine = (function() {
                 rand = Math.floor(Math.random() * max);
             } while (not.indexOf(rand) !== -1);
             return rand;
+        },
+
+        _kill = function(robot) {
+            console.log("" + robot.name + ": " + robot.defeatedCry);
+            console.log("" + robot.name + " was killed.");
+            clearInterval(RV_INTERVAL);
+        },
+
+        _shoot = function(robot) {
+            var robotFeature, featuresPossibleToDestruct = [], featureToDestruct;
+            if (robot.status.shields > 0) {
+                robot.status.shields--;
+                return;
+            }
+
+            for (robotFeature in robot.status) {
+                if (robot.status.hasOwnProperty(robotFeature)) {
+                    if (robot.status[robotFeature] > 1) {
+                        featuresPossibleToDestruct.push(robotFeature);
+                    }
+                }
+            }
+            if (featuresPossibleToDestruct.length === 0) {
+                _kill(robot);
+            } else {
+                featureToDestruct = featuresPossibleToDestruct[Math.floor(Math.random() * (featuresPossibleToDestruct.length))]
+                robot.status[featureToDestruct]--;
+                console.log("" + robot.name + "'s " + featureToDestruct + " descreased by one.");
+                console.log("" + robot.name + ": " + robot.groan);
+            }
         },
 
         _createRandomizedListOfRobotIndices = function() {
@@ -103,10 +135,10 @@ RV.engine = (function() {
         },
 
         _update = function() {
-            var currentMovingRobot, currentMove, i;
+            var currentMovingRobot, currentMove, result, robotIndex, i;
             if (!currentGameTurn || currentGameTurn.finalMoveIndex < currentGameTurn.moveIndex) {
                 // New full game turn
-                console.log("New full game turn");
+//                console.log("New full game turn");
                 currentGameTurn = _createGameTurn();
             }
 
@@ -116,7 +148,10 @@ RV.engine = (function() {
                 currentMove = currentMovingRobot.moves[currentGameTurn.moveIndex];
                 if(currentMove !== undefined) {
                     // This robot still has moves
-                    world.act(currentMovingRobot.name, currentMovingRobot.moves[currentGameTurn.moveIndex]);
+                    result = world.act(currentMovingRobot.name, currentMovingRobot.moves[currentGameTurn.moveIndex]);
+                    if (typeof (robotIndex = robotIndicesByName[result]) === "number") {
+                        _shoot(robots[robotIndex]);
+                    }
                 }
             }
             currentGameTurn.moveIndex++;
@@ -155,11 +190,12 @@ RV.engine = (function() {
     };
 }());
 
+RV_INTERVAL = {} // setInterval(RV.engine.update, 200);
+
 Object.freeze(RV);
 Object.freeze(RV.__proto__);
 
-setInterval(RV.engine.update, 200);
-//setTimeout(RV.engine.update, 4000);
+setTimeout(RV.engine.update, 200);
 //setTimeout(RV.engine.update, 6000);
 
 /*

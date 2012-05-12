@@ -82,7 +82,7 @@ RV.World = function(width, height) {
             var emptyPosition = _getEmptyPosition();
             robotPositions[robotName] = emptyPosition;
             world[emptyPosition.x][emptyPosition.y] = robotName;
-            console.log("Placed robot " + robotName + " in position x: " + robotPositions[robotName].x + ", y: " + robotPositions[robotName].y);
+//            console.log("Placed robot " + robotName + " in position x: " + robotPositions[robotName].x + ", y: " + robotPositions[robotName].y);
         },
 
         _parseAction = function(action) {
@@ -112,9 +112,18 @@ RV.World = function(width, height) {
             world[position.x][position.y] = containsWhat;
         },
 
+        _containsRobot = function(position) {
+            var contained = world[position.x][position.y];
+            if (contained.indexOf("robot") !== -1) {
+                return contained.split(":")[1];
+            } else {
+                return false;
+            }
+        },
+
         _move = function(robotName, direction) {
             var x = robotPositions[robotName].x, y = robotPositions[robotName].y;
-            console.log("About to move robot " + robotName + " to the " + direction);
+//            console.log("About to move robot " + robotName + " to the " + direction);
 
             switch (direction) {
                 case "north":
@@ -146,20 +155,66 @@ RV.World = function(width, height) {
                     }
                     break;
             }
+            return true;
         },
 
         _shoot = function(robotName, direction) {
-            console.log("About to let robot " + robotName + " to shoot to the " + direction);
+            var x = robotPositions[robotName].x, y = robotPositions[robotName].y,
+                hasHit = false, position, robotHit = false;
+//            console.log("About to let robot " + robotName + " to shoot to the " + direction);
+
+            while (!hasHit) {
+                switch (direction) {
+                    case "north":
+                        position = { x: x, y: y - 1 };
+                        if(_isPositionEmpty(position)) {
+                            y--;
+                        } else {
+                            hasHit = true;
+                            robotHit = _containsRobot(position);
+                        }
+                        break;
+                    case "east":
+                        position = { x: x + 1, y: y };
+                        if(_isPositionEmpty(position)) {
+                            x++;
+                        } else {
+                            hasHit = true;
+                            robotHit = _containsRobot(position);
+                        }
+                        break;
+                    case "south":
+                        position = { x: x, y: y + 1 };
+                        if(_isPositionEmpty(position)) {
+                            y++;
+                        } else {
+                            hasHit = true;
+                            robotHit = _containsRobot(position);
+                        }
+                        break;
+                    case "west":
+                        position = { x: x - 1, y: y };
+                        if(_isPositionEmpty(position)) {
+                            x--;
+                        } else {
+                            hasHit = true;
+                            robotHit = _containsRobot(position);
+                        }
+                        break;
+                }
+            }  // end while
+
+            return robotHit;  // Robot's name if hit, else just false
         },
 
         _act = function (robotName, action) {
             var parsedAction = _parseAction(action);
             switch (parsedAction[0]) {
                 case "move":
-                    _move(robotName, parsedAction[1]);
+                    return _move(robotName, parsedAction[1]);
                     break;
                 case "shoot":
-                    _shoot(robotName, parsedAction[1]);
+                    return _shoot(robotName, parsedAction[1]);
                     break;
                 default:
                     throw new Error("Unrecognized action: " + parsedAction[0]);
@@ -223,7 +278,7 @@ RV.World = function(width, height) {
             return _getViewOfTheWorld(robotName, sightLength);
         },
         act: function(robotName, action) {
-            _act(robotName, action)
+            return _act(robotName, action);
         },
         draw: function() {
             _draw();

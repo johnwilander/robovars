@@ -230,9 +230,47 @@ h1 {
     color: white;
 }
 
+img.background {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index:-10;
+    image-rendering:optimizeQuality;
+    -ms-interpolation-mode:bicubic;
+    border-bottom: 1px dotted #fff;
+}
 
+.robotInfoHeader {
+    color: white;
+    display: inline;
+}
 
+.robotSrcInput {
+    display: inline;
+}
 
+.robotInfo {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px dotted #00ff00;
+    background-color: #000000;
+    opacity: 0.9;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+#robotInfo {
+    margin: 10px;
+    width: 400px;
+}
+
+#canvasDiv {
+    width: 512px;
+    height: 480px;
+}
 
 
 
