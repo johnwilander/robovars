@@ -53,7 +53,7 @@ RV.engine = (function() {
                 robots[nextIndex].status = robot.configuration;
                 world.placeRobotInEmptyPosition(robot.name);
                 robotIndicesByName[robot.name] = nextIndex;
-                RV.ui.populateUi(robot.name, robot.configuration.eyes, robot.configuration.tracks, robot.configuration.lasers, robot.configuration.shields);
+                robots[nextIndex].uiNumber = RV.ui.populateUi(robot.name, robot.configuration.eyes, robot.configuration.tracks, robot.configuration.lasers, robot.configuration.shields);
                 console.log("Registered robot " + robot.name);
                 console.log("" + robot.name + ": " + robots[nextIndex].warCry);
             }
@@ -73,7 +73,8 @@ RV.engine = (function() {
         _kill = function(robot) {
             console.log("" + robot.name + ": " + robot.defeatedCry);
             console.log("" + robot.name + " was killed.");
-            clearInterval(RV_INTERVAL);
+            RV.ui.populateUi(robot.name, "killed", "killed", "killed", "killed", robot.uiNumber);
+            clearInterval(window.RV_INTERVAL);
         },
 
         _shoot = function(robot) {
@@ -95,6 +96,7 @@ RV.engine = (function() {
             } else {
                 featureToDestruct = featuresPossibleToDestruct[Math.floor(Math.random() * (featuresPossibleToDestruct.length))]
                 robot.status[featureToDestruct]--;
+                RV.ui.populateUi(robot.name, robot.status.eyes, robot.status.tracks, robot.status.lasers, robot.status.shields, robot.uiNumber);
                 console.log("" + robot.name + "'s " + featureToDestruct + " descreased by one.");
                 console.log("" + robot.name + ": " + robot.groan);
             }
@@ -189,8 +191,6 @@ RV.engine = (function() {
         }
     };
 }());
-
-RV_INTERVAL = {} // setInterval(RV.engine.update, 200);
 
 Object.freeze(RV);
 Object.freeze(RV.__proto__);

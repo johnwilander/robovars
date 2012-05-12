@@ -262,6 +262,11 @@ img.background {
     display: inline-block;
 }
 
+.green-text {
+    color: #44ff44;
+    font-weight: 200;
+}
+
 #robotInfo {
     margin: 10px;
     width: 400px;
@@ -272,8 +277,35 @@ img.background {
     height: 480px;
 }
 
+.small-button {
+    border-radius: 5px;
+    width: 50px;
+}
 
+.large-button {
+    border-radius: 10px;
+    font-size: 2em;
+}
 
+.green-button {
+    display: block;
+    text-align: center;
+
+    background-image: linear-gradient(bottom, rgb(27,171,27) 26%, rgb(63,227,63) 63%, rgb(51,255,51) 82%);
+    background-image: -o-linear-gradient(bottom, rgb(27,171,27) 26%, rgb(63,227,63) 63%, rgb(51,255,51) 82%);
+    background-image: -moz-linear-gradient(bottom, rgb(27,171,27) 26%, rgb(63,227,63) 63%, rgb(51,255,51) 82%);
+    background-image: -webkit-linear-gradient(bottom, rgb(27,171,27) 26%, rgb(63,227,63) 63%, rgb(51,255,51) 82%);
+    background-image: -ms-linear-gradient(bottom, rgb(27,171,27) 26%, rgb(63,227,63) 63%, rgb(51,255,51) 82%);
+
+    background-image: -webkit-gradient(
+        linear,
+        left bottom,
+        left top,
+        color-stop(0.26, rgb(27,171,27)),
+        color-stop(0.63, rgb(63,227,63)),
+        color-stop(0.82, rgb(51,255,51))
+    );
+}
 
 
 

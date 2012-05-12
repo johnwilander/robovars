@@ -42,56 +42,66 @@ chromium.org/developers/how-tos/chrome-frame-getting-started -->
         <canvas id="robovarsCanvas"></canvas>
     </div>
     <div id="robotInfo" class="inline-block">
+        <div>
+            <h3 class="robotInfoHeader">Turn interval in ms</h3>
+            <input id="interval" value="200">
+        </div>
         <div id="robotInfoOne" class="robotInfo">
             <div>
                 <h3 class="robotInfoHeader">JavaScript source</h3>
-                <input id="robotSrcOne" class="robotSrcInput" value="js/RV/robots/johnwilander.js"><button id="loadButton1">Load</button>
+                <input id="robotSrcOne" class="robotSrcInput" value="https://raw.github.com/johnwilander/robovars/master/js/RV/robots/johnwilander.js"><div id="loadButton1" class="green-button small-button">Load</div>
             </div>
             <div>
                 <h3 class="robotInfoHeader">Robot Name</h3>
-                <div id="robotName1" class="inline-block"></div>
+                <div id="robotName1" class="green-text inline-block"></div>
             </div>
             <div>
                 <h3 class="robotInfoHeader">Eyes</h3>
-                <div id="eyes1" class="inline-block"></div>
+                <div id="eyes1" class="green-text inline-block"></div>
             </div>
             <div>
                 <h3 class="robotInfoHeader">Tracks</h3>
-                <div id="tracks1" class="inline-block"></div>
+                <div id="tracks1" class="green-text inline-block"></div>
             </div>
             <div>
                 <h3 class="robotInfoHeader">Lasers</h3>
-                <div id="lasers1" class="inline-block"></div>
+                <div id="lasers1" class="green-text inline-block"></div>
             </div>
             <div>
                 <h3 class="robotInfoHeader">Shields</h3>
-                <div id="shields" class="inline-block"></div>
+                <div id="shields1" class="green-text inline-block"></div>
             </div>
         </div>
         <div id="robotInfoTwo" class="robotInfo">
             <div>
                 <h3 class="robotInfoHeader">JavaScript source</h3>
-                <input id="robotSrcTwo" value="js/RV/robots/randombot.js"><button>Load</button>
+                <input id="robotSrcTwo" class="robotSrcInput" value="https://raw.github.com/johnwilander/robovars/master/js/RV/robots/randombot.js"><div id="loadButton2" class="green-button small-button">Load</div>
             </div>
             <div>
                 <h3 class="robotInfoHeader">Robot Name</h3>
+                <div id="robotName2" class="green-text inline-block"></div>
             </div>
             <div>
                 <h3 class="robotInfoHeader">Eyes</h3>
+                <div id="eyes2" class="green-text inline-block"></div>
             </div>
             <div>
                 <h3 class="robotInfoHeader">Tracks</h3>
+                <div id="tracks2" class="green-text inline-block"></div>
             </div>
             <div>
                 <h3 class="robotInfoHeader">Lasers</h3>
+                <div id="lasers2" class="green-text inline-block"></div>
             </div>
             <div>
                 <h3 class="robotInfoHeader">Shields</h3>
+                <div id="shields2" class="green-text inline-block"></div>
             </div>
         </div>
+        <div id="varButton" class="green-button large-button">Go to var!</div>
     </div>
 <footer>
-
+<div class="green-text">Game graphics borrowed from <a href="http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/">http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/</a></div>
 </footer>
 
 
@@ -105,8 +115,8 @@ chromium.org/developers/how-tos/chrome-frame-getting-started -->
 <script src="js/plugins.js"></script>
 <script src="js/RV/World.js"></script>
 <script src="js/RV/view.js"></script>
-<script src="js/RV/engine.js"></script>
 <script src="js/RV/ui.js"></script>
+<script src="js/RV/engine.js"></script>
 <!-- end scripts -->
 
 <!-- Asynchronous Google Analytics snippet. Change UA-XXXXX-X to be your site's ID.
