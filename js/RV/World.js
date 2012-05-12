@@ -120,28 +120,28 @@ RV.World = function(width, height) {
                 case "north":
                     if(_isPositionEmpty( { x: x, y: y - 1 })) {
                         robotPositions[robotName].y = y - 1;
-                        _setPositionContained( { x: x, y: (y-1) }, robotName);
+                        _setPositionContained( { x: x, y: (y-1) }, "robot:" + robotName);
                         _setPositionEmpty( { x: x, y: y } );
                     }
                     break;
                 case "east":
                     if(_isPositionEmpty( { x: x + 1, y: y })) {
                         robotPositions[robotName].x = x + 1;
-                        _setPositionContained( { x: (x+1), y: y }, robotName);
+                        _setPositionContained( { x: (x+1), y: y }, "robot:" + robotName);
                         _setPositionEmpty( { x: x, y: y } );
                     }
                     break;
                 case "south":
                     if(_isPositionEmpty( { x: x, y: y + 1 })) {
                         robotPositions[robotName].y = y + 1;
-                        _setPositionContained( { x: x, y: (y+1) }, robotName);
+                        _setPositionContained( { x: x, y: (y+1) }, "robot:" + robotName);
                         _setPositionEmpty( { x: x, y: y } );
                     }
                     break;
                 case "west":
                     if(_isPositionEmpty( { x: x - 1, y: y })) {
                         robotPositions[robotName].x = x - 1;
-                        _setPositionContained( { x: (x-1), y: y }, robotName);
+                        _setPositionContained( { x: (x-1), y: y }, "robot:" + robotName);
                         _setPositionEmpty( { x: x, y: y } );
                     }
                     break;
@@ -182,14 +182,14 @@ RV.World = function(width, height) {
         /**
          * Returns the robot's view of the world. For a robot with two working eyes this could be the result:
          * {
-         *   north1: { contains: 'empty'    , direction: 'north' },
-         *   east1:  { contains: 'empty'    , direction: 'east'  },
-         *   south1: { contains: 'wall'     , direction: 'south' },
-         *   west1:  { contains: 'robot2'   , direction: 'west'  }
-         *   north2: { contains: 'empty'    , direction: 'north' },
-         *   east2:  { contains: 'wall'     , direction: 'east'  },
-         *   south2: { contains: 'invisible', direction: 'south' },
-         *   west2:  { contains: 'hole'     , direction: 'west'  }
+         *   north1: { contains: 'empty'     , direction: 'north' },
+         *   east1:  { contains: 'empty'     , direction: 'east'  },
+         *   south1: { contains: 'wall'      , direction: 'south' },
+         *   west1:  { contains: 'robot:wtf' , direction: 'west'  }
+         *   north2: { contains: 'empty'     , direction: 'north' },
+         *   east2:  { contains: 'wall'      , direction: 'east'  },
+         *   south2: { contains: 'invisible' , direction: 'south' },
+         *   west2:  { contains: 'hole'      , direction: 'west'  }
          * }
          * ... whichs corresponds to:
          *
