@@ -1,12 +1,14 @@
 /**
  * @johnwilander
  */
-RV = {};
+RV = window.RV ? window.RV : {};
 
 RV.engine = (function() {
     "use strict";
     var robots = [], deadRobots = [],
         MAX_CONFIG_POINTS = 50,
+
+    // Registration functions
         _nameOK = function(name) {
             if(typeof name === "string" && name.length <= 20) {
                 return true;
@@ -45,11 +47,10 @@ RV.engine = (function() {
                 robots[nextIndex].status = robot.configuration;
             }
         },
-        _pickRandomNumber = function(max, not) {
+        _pickRandomNumberButAvoid = function(max, not) {
             var rand;
             if (not.length >= max) {
-                console.log("Risk of infinite loop since not.length >= max. Exiting.");
-                throw new Error();
+                throw new Error("Risk of infinite loop since not.length >= max. Exiting.");
             }
             do {
                 rand = Math.floor(Math.random() * max);
@@ -66,7 +67,7 @@ RV.engine = (function() {
             var robotIndicesNotToPick = deadRobots.slice(0),  // Copy
                 robotIndicesInOrderForThisUpdate = [], nextRobotIndex, i;
             while (robotIndicesNotToPick.length < robots.length) {
-                nextRobotIndex = _pickRandomNumber(robots.length, robotIndicesNotToPick);
+                nextRobotIndex = _pickRandomNumberButAvoid(robots.length, robotIndicesNotToPick);
                 robotIndicesInOrderForThisUpdate.push(nextRobotIndex);
                 robotIndicesNotToPick.push(nextRobotIndex);
             }
@@ -86,7 +87,7 @@ RV.engine = (function() {
 }());
 
 Object.freeze(RV);
-Object.freeze(RV.prototype);
+Object.freeze(RV.__proto__);
 
 setInterval(RV.engine.update, 2000);
 
